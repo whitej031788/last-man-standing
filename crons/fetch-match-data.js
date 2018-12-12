@@ -71,7 +71,7 @@ function getAddMatches(matchDayId, leagueId, myOpts) {
 }
 
 function addMatchesToMongo(matches) {
-  console.log(matches.length);
+  console.log(matches[0]);
   var theWinner = "";
   for (let i = 0; i < matches.length; i++) {
     if (matches[i].status == "FINISHED") {

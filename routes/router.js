@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var League = require('../models/league');
+var Match = require('../models/match');
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
