@@ -8,6 +8,7 @@ function createLeagueObj() {
   this.selectedLeague = ko.observable('');
   this.joinCode = ko.observable('');
   this.leagueId = ko.observable('');
+  this.userEmail = ko.observable(document.getElementById('userEmail').value);
 
   this.availableLeagues = ko.observableArray(['Premier League', 'Championship', 'La Liga']);
 

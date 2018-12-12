@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var League = require('../models/league');
-var https = require("https");
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
@@ -29,7 +28,7 @@ router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
     } else {
       let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
       
-      res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague });
+      res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague, userEmail: req.session.email });
     }
   });
 });
@@ -39,11 +38,12 @@ router.get('/settings', requiresLogin, function(req, res, next) {
 });
 
 router.get('/create-league', requiresLogin, function(req, res, next) {
-  res.render('create-league', { title: 'Create League', route: req.route.path });
+  console.log(req.session.email);
+  res.render('create-league', { title: 'Create League', route: req.route.path, userEmail: req.session.email });
 });
 
 router.get('/join-league', requiresLogin, function(req, res, next) {
-  res.render('join-league', { title: 'Join League', route: req.route.path });
+  res.render('join-league', { title: 'Join League', route: req.route.path, userEmail: req.session.email });
 });
 
 router.get('/rules', requiresLogin, function(req, res, next) {
@@ -74,6 +74,7 @@ router.post('/login-user', function(req, res, next) {
       res.json(500, "Wrong email or password");
     } else {
       req.session.userId = user._id;
+      req.session.email = user.email;
       res.json(200, {success: true});
     }
   });
@@ -99,6 +100,7 @@ router.post('/create-user', function(req, res, next) {
       if (error) {
         res.json(500, error);
       } else {
+        req.session.email = user.email;
         req.session.userId = user._id;
         res.json(200, {success: true});
       }
