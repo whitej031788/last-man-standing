@@ -1,5 +1,6 @@
 const https = require('https');
 const Match = require('../models/match');
+const Config = require('../models/config');
 const mongoose = require('mongoose');
 
 //connect to MongoDB
@@ -28,6 +29,7 @@ var req = https.request(options, function(res) {
 
   res.on('end', function(){
     let myEnd = JSON.parse(response);
+    storeAppConfig(myEnd.currentSeason.currentMatchday + 1);
     getAddMatches(myEnd.currentSeason.currentMatchday, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 1, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 2, leagueId, options);
@@ -36,6 +38,7 @@ var req = https.request(options, function(res) {
 
   res.on('close', function(){
     let myEnd = JSON.parse(response);
+    storeAppConfig(myEnd.currentSeason.currentMatchday + 1);
     getAddMatches(myEnd.currentSeason.currentMatchday, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 1, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 2, leagueId, options);
@@ -44,6 +47,13 @@ var req = https.request(options, function(res) {
 });
 
 req.end();
+
+function storeAppConfig(matchDay) {
+  Config.findOneAndUpdate({ }, {match_day: matchDay}, {upsert:true}, function(err, doc) {
+    if (err) console.log(err);
+    console.log("Added config object: \n");
+  });
+}
 
 function getAddMatches(matchDayId, leagueId, myOpts) {
   console.log('Now calling getMatches');
@@ -71,7 +81,6 @@ function getAddMatches(matchDayId, leagueId, myOpts) {
 }
 
 function addMatchesToMongo(matches) {
-  console.log(matches[0]);
   var theWinner = "";
   for (let i = 0; i < matches.length; i++) {
     if (matches[i].status == "FINISHED") {
@@ -86,13 +95,13 @@ function addMatchesToMongo(matches) {
       theWinner = "PENDING";
     }
     var matchData = {
-      kickoff_time: matches[i].utcDate,
-      home_team: matches[i].homeTeam.name,
-      away_team: matches[i].awayTeam.name,
-      winner: theWinner,
-      status: matches[i].status,
+      kickoff_time: matches[i].utcDate.trim(),
+      home_team: matches[i].homeTeam.name.trim(),
+      away_team: matches[i].awayTeam.name.trim(),
+      winner: theWinner.trim(),
+      status: matches[i].status.trim(),
       matchday: matches[i].matchday,
-      last_updated: matches[i].lastUpdated,
+      last_updated: matches[i].lastUpdated.trim(),
       score: matches[i].score,
       apiId: matches[i].id
     }
