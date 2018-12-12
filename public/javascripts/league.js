@@ -3,6 +3,7 @@ function leagueObj() {
   this.leagueId = ko.observable(document.getElementById('myLeagueId').value);
   this.error = ko.observable('');
   this.success = ko.observable('');
+  this.userEmail = ko.observable(document.getElementById('userEmail').value);
 
   this.joinLeaguePriv = function() {
     let self = this;

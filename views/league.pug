@@ -3,6 +3,7 @@ extends layout-logged-in.pug
 block content-child
   .container.child
     input(type="hidden" name="leagueId" id="myLeagueId" value=league._id)
+    input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
     if isValid
       .row They are a member of the league
     else
