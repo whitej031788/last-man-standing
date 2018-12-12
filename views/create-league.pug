@@ -1,5 +1,41 @@
 extends layout-logged-in.pug
 
 block content-child
-  .container
+  .container.child
     .row
+      .col-12.text-center
+        h2 Create a League
+      .col-8.offset-2.mb-2
+        p 
+        | You can create either a private or public league. If you create a private league, 
+        | you will be given a random password and a link, which can be sent to whoever you want to join.
+        | If you create a public league, anyone will be able to join it from their dashboard, up until
+        | it has reached its maximum participants.
+    .row
+      .col-8.offset-2
+        .card.card-body
+          .alert-danger.mb-2.pl-3(data-bind="visible: error, text: error")
+          .alert-success.mb-2.pl-3(data-bind="visible: success, text: success")
+          .col-12(data-bind="visible: success")
+            .row
+              .col-12(data-bind="visible: joinCode")
+                p Your invite code to send out is:
+                p.strong(data-bind="text: joinCode")
+              .col-12
+                p Your invite link can be copied from below:
+                a.strong(data-bind="attr: { href: '/league/' + leagueId() }") Invite Link
+          form(data-bind="visible: !success()")
+            fieldset
+              .form-group.has-error.half-width-form-control
+                input.form-control.input-lg(placeholder='League Name', name='name', type='text', data-bind='value: name')
+              .form-group.has-error
+                input.form-control.input-lg(placeholder='Joining Fee', name='fee', type='number', data-bind='value: joinFee')
+              .form-group.has-success
+                input.form-control.input-lg(placeholder='Max Players', name='max', type='number', data-bind='value: maxPlayers')
+              .form-group.has-success
+                select.form-control.input-lg(data-bind="options: availableLeagues, value: selectedLeague")
+              .checkbox
+                label.small
+                  input(name='public', type='checkbox', style='margin-right:5px;', data-bind='checked: isPublic')
+                  |  League is public
+              input.btn.btn-lg.btn-primary.btn-block(value='Create League', type='submit', data-bind='click: createLeague')

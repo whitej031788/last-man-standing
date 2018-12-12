@@ -5,6 +5,7 @@
  
  body {
    font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+   background-color: rgba(200,144,567, .1);
  }
  
  hr {
@@ -257,7 +258,15 @@
    -webkit-transition: all 0.2s;
    transition: all 0.2s;
  }
- 
+ .container.child {
+   padding-top: 75px;
+ }
+ .nav-item.active {
+  background-color: black;
+ }
+ .navbar-light .navbar-nav .active>.nav-link {
+   color: white !important;
+ }
  .portfolio-box .portfolio-box-caption .portfolio-box-caption-content {
    position: absolute;
    top: 50%;
@@ -265,6 +274,21 @@
    -webkit-transform: translateY(-50%);
    transform: translateY(-50%);
    text-align: center;
+ }
+ .navbar {
+  height: inherit;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  color: #fff;
+  background: #216796;
+  background: -webkit-linear-gradient(135deg,#F05F40,rgb(245, 116, 87));
+  background: linear-gradient(-45deg,#F05F40,rgb(245, 116, 87));
+  z-index: 10;
+  -webkit-box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+  box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+  overflow: hidden;
  }
  
  .portfolio-box .portfolio-box-caption .portfolio-box-caption-content .project-category,

@@ -1,0 +1,32 @@
+extends layout-logged-in.pug
+
+block content-child
+  .container.child
+    input(type="hidden" name="leagueId" id="myLeagueId" value=league._id)
+    if isValid
+      .row They are a member of the league
+    else
+      .row 
+        .col-12.text-center
+          h2 #{league.name}
+        if league.isPublic
+          .col-8.offset-2.mb-2
+            p.mb-2
+              | You have arrived at a public league. Anyone can join, until the maximum league size has been met.
+              | Click below to join!
+            .card.card-body
+              .alert-danger.mb-2.pl-3(data-bind="visible: error, text: error")
+              fieldset
+              input.btn.btn-lg.btn-primary.btn-block(value='Join League', type='submit', data-bind='click: joinPubLeague')
+        else
+          .col-8.offset-2.mb-2
+            p.mb-2
+              | You have arrived at a private league. The administrator of this league should have given you a private code in order
+              | to join. Please enter the code below. If you do not have a code, please contact the league administrator.
+            .card.card-body
+              h3 Enter Code
+              .alert-danger.mb-2.pl-3(data-bind="visible: error, text: error")
+              fieldset
+              .form-group.has-error.half-width-form-control
+                input.form-control.input-lg(placeholder='League Code', name='code', type='text', data-bind='value: privLeagueCode')
+              input.btn.btn-lg.btn-primary.btn-block(value='Join League', type='submit', data-bind='click: joinLeaguePriv')

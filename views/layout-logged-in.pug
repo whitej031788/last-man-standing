@@ -1,25 +1,26 @@
 extends layout.pug
 
 block content
-  nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  nav.navbar.navbar-expand-lg.navbar-light.bg-light#lmsNavBar
     a.navbar-brand(href='#') LMS
     button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
       span.navbar-toggler-icon
     
     .collapse.navbar-collapse(id='navbarSupportedContent')
       ul.navbar-nav.mr-auto
-        li.nav-item
+        li.nav-item(data-bind="css: { active: activeNav() == 'main' }")
           a.nav-link(href='/main') Home
-        li.nav-item
+        li.nav-item(data-bind="css: { active: activeNav() == 'join-league' }")
           a.nav-link(href='/join-league') Join League
-        li.nav-item
+        li.nav-item(data-bind="css: { active: activeNav() == 'create-league' }")
           a.nav-link(href='/create-league') Create League
-        li.nav-item
+        li.nav-item(data-bind="css: { active: activeNav() == 'rules' }")
           a.nav-link(href='/rules') Rules
-        li.nav-item
+        li.nav-item(data-bind="css: { active: activeNav() == 'settings' }")
           a.nav-link(href='/settings') Settings
       ul.navbar-nav.float-right
         li.nav-item
           a.nav-link(href='/logout') Logout
           
   block content-child
+  script(src='/javascripts/logged-in.js')

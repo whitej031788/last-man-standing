@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var League = require('../models/league');
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
@@ -16,6 +17,19 @@ router.get('/login', function(req, res, next) {
 
 router.get('/main', requiresLogin, function(req, res, next) {
   res.render('main', { title: 'Main', route: req.route.path });
+});
+
+router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
+  League.getLeagueById(req.params.leagueId, function (error, league) {
+    if (error || !league) {
+      var err = new Error('League not found');
+      err.status = 404;
+      next(err);
+    } else {
+      let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
+      res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague });
+    }
+  });
 });
 
 router.get('/settings', requiresLogin, function(req, res, next) {
@@ -92,12 +106,78 @@ router.post('/create-user', function(req, res, next) {
   }
 });
 
+router.post('/create-league', function(req, res, next) {
+
+  if (req.body.name &&
+    req.body.maxPlayers &&
+    req.body.joinFee &&
+    req.body.league) {
+
+    var leagueData = {
+      name: req.body.name,
+      maxPlayers: req.body.maxPlayers,
+      joinFee: req.body.joinFee,
+      isPublic: req.body.isPublic,
+      leagueName: req.body.league,
+      players: [req.session.userId],
+      leagueAdmin: req.session.userId
+    }
+
+    if (!req.body.isPublic) {
+      leagueData.joinCode = guid();
+    }
+
+    League.create(leagueData, function (error, league) {
+      if (error) {
+        res.json(500, error);
+      } else {
+        res.json(200, {success: true, league_id: league._id, joinCode: league.joinCode});
+      }
+    });
+  } else {
+    res.json(500, 'All fields required');
+  }
+});
+
+router.post('/join-league', function(req, res, next) {
+  if (!req.body.leagueId) {
+    res.json(500, "We did not get a league ID");
+  } else {
+    League.getLeagueById(req.body.leagueId, function (error, league) {
+      if (error || !league) {
+        res.json(500, "League not found");
+      } else {
+        let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
+        if (isInLeague) {
+          res.json(500, "You are already in the league!");
+        } else if (!league.isPublic && (league.joinCode != req.body.joinCode)) {
+            res.json(500, "The league code is not correct");
+        } else {
+          league.players.push(req.session.userId);
+          console.log(league);
+          league.save();
+          res.json(200, {success: true});
+        }
+      }
+    });
+  }
+});
+
 function requiresLogin(req, res, next) {
   if (req.session && req.session.userId) {
     return next();
   } else {
     return res.redirect('/');
   }
+}
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
 module.exports = router;
