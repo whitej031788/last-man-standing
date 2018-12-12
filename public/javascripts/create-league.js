@@ -29,38 +29,40 @@ function createLeagueObj() {
       return;
     }
 
-    $.ajax({
-      url: "/create-league",
-      type: "POST",
-      data: self.serializeData(),
-      contentType: "application/json",
-      dataType: "json",
-      success: function(data) {
-        if (data.success) {
-          self.success("Your league has been created, and you have been added to it.");
-          self.leagueId(data.league_id);
-          if (data.joinCode) {
-            self.joinCode(data.joinCode);
-          }
-        } else {
-          self.error('Something went wrong! Please contact support');
-        }
-        console.log(data);
-      },
-      error: function(err) {
-        if (err.responseJSON && err.responseJSON.code == 11000) {
-          self.error('A league with that name already exists. Please try another name');
-           // Duplicate league name
-        } else {
-          self.error('Something went wrong! Please contact support');
-        }
-        console.log(err);
-      },
-      failure: function(err) {
-        self.error('Something went wrong! Please contact support');
-        console.log(err);
-      }
-    });
+    self.openStripeCheckout();
+
+    // $.ajax({
+    //   url: "/create-league",
+    //   type: "POST",
+    //   data: self.serializeData(),
+    //   contentType: "application/json",
+    //   dataType: "json",
+    //   success: function(data) {
+    //     if (data.success) {
+    //       self.success("Your league has been created, and you have been added to it.");
+    //       self.leagueId(data.league_id);
+    //       if (data.joinCode) {
+    //         self.joinCode(data.joinCode);
+    //       }
+    //     } else {
+    //       self.error('Something went wrong! Please contact support');
+    //     }
+    //     console.log(data);
+    //   },
+    //   error: function(err) {
+    //     if (err.responseJSON && err.responseJSON.code == 11000) {
+    //       self.error('A league with that name already exists. Please try another name');
+    //        // Duplicate league name
+    //     } else {
+    //       self.error('Something went wrong! Please contact support');
+    //     }
+    //     console.log(err);
+    //   },
+    //   failure: function(err) {
+    //     self.error('Something went wrong! Please contact support');
+    //     console.log(err);
+    //   }
+    // });
   }
 
   this.serializeData = function() {
@@ -75,7 +77,30 @@ function createLeagueObj() {
 
     return JSON.stringify(obj);
   }
+
+  this.openStripeCheckout = function() {
+    let self = this;
+    // Open Checkout with further options:
+      handler.open({
+        name: 'Last Man Standing',
+        description: 'You have to pay the entrance fee',
+        currency: 'gbp',
+        amount: self.joinFee() * 100,
+        email: "sam@paddle.com" //self.email()
+      });
+    e.preventDefault();
+  }
 }
+
+var handler = StripeCheckout.configure({
+  key: 'pk_test_qHPmRmiktz9ipePqMmOwwAz5',
+  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+  locale: 'auto',
+  token: function(token) {
+    // You can access the token ID with `token.id`.
+    // Get the token ID to your server-side code for use.
+  }
+});
 
 let newObj = new createLeagueObj();
 ko.applyBindings(newObj, $('.container.child')[0]);
