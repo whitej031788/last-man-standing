@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var League = require('../models/league');
+var https = require("https");
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
@@ -27,6 +28,7 @@ router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
       next(err);
     } else {
       let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
+      
       res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague });
     }
   });
