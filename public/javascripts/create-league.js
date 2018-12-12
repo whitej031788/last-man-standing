@@ -92,7 +92,7 @@ function createLeagueObj() {
   }
 }
 
-var handler = StripeCheckout.configure({
+handler = StripeCheckout.configure({
   key: 'pk_test_qHPmRmiktz9ipePqMmOwwAz5',
   image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
   locale: 'auto',
