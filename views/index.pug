@@ -1,0 +1,70 @@
+extends layout
+
+block content
+  header.masthead.text-center.text-white.d-flex
+    .container.my-auto
+      .row
+        .col-lg-10.mx-auto.back-fade.pb-5.pt-2
+          h1.text-uppercase
+            strong Last Man Standing
+          hr
+          p.text-faded.mb-5
+            | Join a league. Pick your teams. Win your prize. Sign up now and create a league for your mates, or join a public league and win big!
+          .row
+            .col-lg-2.offset-lg-4.mb-2
+              a.btn.btn-primary.btn-xl.js-scroll-trigger(href='/login') Login
+            .col-lg-2
+              a.btn.btn-primary.btn-xl.js-scroll-trigger(href='/register') Register
+  section#about.bg-primary
+    .container
+      .row
+        .col-lg-8.mx-auto.text-center
+          h2.section-heading.text-white What is Last Man Standing?
+          hr.light.my-4
+          p.text-faded.mb-4
+            | Last Man Standing is a very popular game the world over. It is a simple concept. Each week, you pick a team
+            | that you think is going to win in the upcoming "match week". If your team wins, you move onto
+            | the next week, and the Last Man Standing wins! Sounds easy, right? Join up for free to get a more 
+            | detailed rules breakdown!
+          a.btn.btn-light.btn-xl.js-scroll-trigger(href='/register') Get Started!
+  section#services
+    .container
+      .row
+        .col-lg-12.text-center
+          h2.section-heading At Your Service
+          hr.my-4
+    .container
+      .row
+        .col-lg-3.col-md-6.text-center
+          .service-box.mt-5.mx-auto
+            i.fas.fa-4x.fa-gem.text-primary.mb-3.sr-icon-1
+            h3.mb-3 24/7 Support
+            p.text-muted.mb-0 Our team is always available to help with any questions or issues you may have
+        .col-lg-3.col-md-6.text-center
+          .service-box.mt-5.mx-auto
+            i.fas.fa-4x.fa-paper-plane.text-primary.mb-3.sr-icon-2
+            h3.mb-3 Automatic Payouts
+            p.text-muted.mb-0 Don't rely on your mate to collect large sums of money to distribute back out. Last Man Standing handles collection and winner payouts!
+        .col-lg-3.col-md-6.text-center
+          .service-box.mt-5.mx-auto
+            i.fas.fa-4x.fa-code.text-primary.mb-3.sr-icon-3
+            h3.mb-3 Up to Date
+            p.text-muted.mb-0 We constantly check public API's to make sure fixture lists are up to date, and even link you to any pre-match analysis
+        .col-lg-3.col-md-6.text-center
+          .service-box.mt-5.mx-auto
+            i.fas.fa-4x.fa-heart.text-primary.mb-3.sr-icon-4
+            h3.mb-3 Made with Love
+            p.text-muted.mb-0 Created by people who love football, have been playing Last Man Standing for ages and wanted an easier way
+  section#contact.bg-dark.text-white
+    .container
+      .row
+        .col-lg-8.mx-auto.text-center
+          h2.section-heading Get In Touch!
+          hr.my-4
+          p.mb-5
+            | Any questions about Last Man Standing? Feel free to send us an email and we will get back to you as soon as possible!
+      .row
+        .col-lg-4.mr-auto.text-center.offset-lg-4
+          i.fas.fa-envelope.fa-3x.mb-3.sr-contact-2
+          p
+            a(href='mailto:your-email@your-domain.com') feedback@startbootstrap.com

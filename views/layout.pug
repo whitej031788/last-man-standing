@@ -1,0 +1,36 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    link(rel='icon', href='/images/favicon.ico')
+
+    block title
+      title Last Man Standing
+
+    link(
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css"
+      integrity="sha256-NJWeQ+bs82iAeoT5Ktmqbi3NXwxcHlfaVejzJI2dklU="
+      crossorigin="anonymous"
+    )
+
+    link(href='/stylesheets/style.css', rel='stylesheet', type='text/css')
+  body
+    block content
+
+    script(
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    )
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js" integrity="sha256-pS96pU17yq+gVu4KBQJi38VpSuKN7otMrDQprzf/DWY=" crossorigin="anonymous")
+    script(
+      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"
+      integrity="sha256-DiWJXXyq81WlPRnDfGmgYZj2aOVCKyEdJ1l+2TmDuAs="
+      crossorigin="anonymous"
+    )
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js')
+    script(src='/javascripts' + route + '.js')

@@ -1,0 +1,26 @@
+extends layout.pug
+
+block content
+  header.masthead.text-center.text-black.d-flex
+    .container.center-vert
+      .row
+        .col-md-6.offset-md-3
+          .row
+            .card.card-body
+              .row.mt-2
+                .col-md-6.t-left
+                  a(href='/') Home
+              h3.text-center.mb-4.okta-form-title.o-form-head LMS Login
+              .alert-danger.mb-2(data-bind="visible: error, text: error")
+              form
+                fieldset
+                  .form-group.has-error
+                    input.form-control.input-lg(placeholder='E-mail Address', name='email', type='text', data-bind='value: email')
+                  .form-group.has-success
+                    input.form-control.input-lg(placeholder='Password', name='password', value='', type='password', data-bind='value: password')
+                  input.btn.btn-lg.btn-primary.btn-block(value='Login', type='submit', data-bind='click: login')
+              .row.mt-2
+                .col-md-6
+                  a(href='#') Forgot Password?
+                .col-md-6
+                  a(href='/register') Register

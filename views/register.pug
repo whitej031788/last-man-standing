@@ -1,0 +1,32 @@
+extends layout.pug
+
+block content
+  header.masthead.text-center.text-black.d-flex
+    .container.center-vert
+      .row
+        .col-md-6.mx-auto
+          .row
+          .card.card-body
+            h3.text-center.mb-4.okta-form-title.o-form-head LMS Sign Up
+            .alert-danger.mb-2(data-bind="visible: error, text: error")
+            form
+              fieldset
+                .form-group.has-error.half-width-form-control
+                  input.form-control.input-lg(placeholder='Name', name='firstName', type='text', data-bind='value: fullName')
+                .form-group.has-error
+                  input.form-control.input-lg(placeholder='E-mail Address', name='email', type='text', data-bind='value: regEmail')
+                .form-group.has-success
+                  input.form-control.input-lg(placeholder='Password', name='password', value='', type='password', data-bind='value: regPass')
+                .form-group.has-success
+                  input.form-control.input-lg(placeholder='Confirm Password', name='password', value='', type='password', data-bind='value: regPassConf')
+                .checkbox
+                  label.small
+                    input(name='terms', type='checkbox', style='margin-right:5px;', data-bind='checked: TOC')
+                    |  I have read and agree to the 
+                    a(href='#') terms of service
+                input.btn.btn-lg.btn-primary.btn-block(value='Sign Me Up', type='submit', data-bind='click: submitRegistration')
+              .row.mt-2
+                .col-md-6
+                  a(href='/') Home
+                .col-md-6
+                  a(href='/login') Login
