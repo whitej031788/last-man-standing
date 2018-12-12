@@ -82,26 +82,54 @@ function createLeagueObj() {
   this.openStripeCheckout = function() {
     let self = this;
     // Open Checkout with further options:
-      handler.open({
+      self.stripeHandler.open({
         name: 'Last Man Standing',
         description: 'You have to pay the entrance fee',
         currency: 'gbp',
         amount: self.joinFee() * 100,
-        email: "sam@paddle.com" //self.email()
+        email: self.userEmail()
       });
     e.preventDefault();
   }
+this.stripeHandler = StripeCheckout.configure({
+    key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
+    image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+    locale: 'auto',
+    token: function(token) {
+      console.log(token)
+      // You can access the token ID with `token.id`.
+      // Get the token ID to your server-side code for use.
+        $.ajax({
+        url: "/stripeCheckout",
+        type: "POST",
+        data: self.serializeStripeData(token.id),
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data) {
+          console.log(data);
+        },
+        error: function(err) {
+          console.log(err);
+        },
+        failure: function(err) {
+          console.log(err);
+        }
+      });
+    }
+  });
+
+  this.serializeStripeData = function(token) {
+    let self = this;
+    let obj = {};
+
+    obj.amount = self.joinFee().trim();
+    obj.token = token;
+
+    return JSON.stringify(obj);
+  }
 }
 
-handler = StripeCheckout.configure({
-  key: 'pk_test_qHPmRmiktz9ipePqMmOwwAz5',
-  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
-  locale: 'auto',
-  token: function(token) {
-    // You can access the token ID with `token.id`.
-    // Get the token ID to your server-side code for use.
-  }
-});
+
 
 let newObj = new createLeagueObj();
 ko.applyBindings(newObj, $('.container.child')[0]);

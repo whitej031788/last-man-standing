@@ -2,6 +2,19 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var League = require('../models/league');
+var stripe = require("stripe")("sk_test_wWPYueXqxHLRnOxiA37wtRXE");
+
+router.post('/stripePayment', requiresLogin, (req, res, next) => {
+  const token = request.body.stripeToken; // Using Express
+
+  const charge = stripe.charges.create({
+    amount: req.body.amount,
+    currency: 'gbp',
+    description: 'Example charge',
+    source: req.body.token
+  });
+
+})
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
