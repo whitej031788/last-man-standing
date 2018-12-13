@@ -8,25 +8,16 @@ block content-child
   .image-block
     img.imagefit2#IdName(src="images/Football-Crazy.jpg" alt="LMS")
     .row
-      .col-12.body-text.text-center.mb-2
-        | When you inevitably win a ton of money, you are going to want to be paid out that money! 
-        | Let us know the best place to send your winnings below.
       p
       .col-8.offset-2
         form
-          .form-container
-            .personal-information
-              h3 Payment Information
-              p  
-            // end of personal-information
-            input#column-left(type='text', name='first-name', placeholder='First Name')
-            input#column-right(type='text', name='last-name', placeholder='Last Name')
-            input#input-field(type='text', name='number', placeholder='Card Number')
-            input#column-left(type='text', name='expiry date', placeholder='MM / YY')
-            input#column-right(type='text', name='cvc', placeholder='CVV')
-            .card-wrapper
-            input#input-field(type='text', name='streetaddress', required='required', autocomplete='on', maxlength='45', placeholder='Street Address')
-            input#column-left(type='text', name='city', required='required', autocomplete='on', maxlength='20', placeholder='City')
-            input#column-right(type='text', name='zipcode', required='required', autocomplete='on', pattern='[0-9]*', maxlength='5', placeholder='ZIP code')
-            input#input-field(type='email', name='email', required='required', autocomplete='on', maxlength='40', placeholder='Email')
-            input#input-button(type='submit', value='Submit')
+        .form-container
+          .personal-information
+            h3 Card Information
+            p  
+          input#column-left(type='text', name='first-name', placeholder='First Name')
+          input#column-right(type='text', name='last-name', placeholder='Last Name')
+          input#column-left(type='text', name='number', placeholder='Sort Code')
+          input#column-right(type='text', name='expiry date', placeholder='Account Number')
+          .card-wrapper
+          input#input-button(type='submit', value='Submit')

@@ -231,7 +231,6 @@ header.masthead p {
 .personal-information {
   background-color: #F05F40;
   color: #fff;
-  padding: 1px 0;
   text-align: center;
 }
 h1 {
@@ -283,14 +282,14 @@ input[type="submit"]:hover{
   width: 50%;
   float: right;
 }
+#input-field {
+  width: 50%;
+}
 @media only screen and (max-width: 480px){
   body {
     width: 100%;
     margin: 0 auto;
   }
-  /*.form-container {
-    margin: 0 2%;
-  }*/
   input {
     font-size: 1em;
   }
@@ -298,7 +297,7 @@ input[type="submit"]:hover{
     width: 100%;
   }
   #input-field {
-    width: 96.5%;
+    width: 50%;
   }
   h1 {
     font-size: 1.2em;
