@@ -1,6 +1,7 @@
 extends layout-logged-in.pug
 
 block content-child
+  input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
   .container.child
     .row
       .col-12.text-center
@@ -23,5 +24,5 @@ block content-child
                   td= league.maxPlayers
                   td= league.joinFee
                   td
-                    input.btn.btn-sm.btn-primary.btn-block(value='Join League', type='submit', data-bind="click: joinLeague.bind($data, '" + league._id + "')")
+                    input.btn.btn-sm.btn-primary.btn-block(value='Join League', type='submit', data-bind="click: joinLeague.bind($data, '" + league._id + "'," + league.joinFee + ")")
 
