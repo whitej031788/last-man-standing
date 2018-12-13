@@ -88,7 +88,6 @@ function createLeagueObj() {
 
     let stripe = StripeCheckout.configure({
       key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
-      image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
       locale: 'auto',
       token: function(token) {
         console.log(token)
