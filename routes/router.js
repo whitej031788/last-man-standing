@@ -90,7 +90,13 @@ router.get('/create-league', requiresLogin, function(req, res, next) {
 
 router.get('/join-league', requiresLogin, function(req, res, next) {
   League.find({ isPublic: true }, function (err, leagues) {
-    res.render('join-league', { title: 'Join League', route: req.route.path, leagues: leagues, userEmail: req.session.email });
+    let finalLagues = [];
+    for (let i = 0; i < leagues.length; i++) {
+      if (leagues[i].players.indexOf(req.session.userId) === -1) {
+        finalLagues.push(leagues[i]);
+      }
+    }
+    res.render('join-league', { title: 'Join League', route: req.route.path, leagues: finalLagues, userEmail: req.session.email });
   })
 });
 
