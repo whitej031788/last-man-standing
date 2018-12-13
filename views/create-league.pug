@@ -2,6 +2,7 @@ extends layout-logged-in.pug
 
 block content-child
   .container.child
+    input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
     .row
       .col-12.text-center
         h2 Create a League
@@ -39,3 +40,4 @@ block content-child
                   input(name='public', type='checkbox', style='margin-right:5px;', data-bind='checked: isPublic')
                   |  League is public
               input.btn.btn-lg.btn-primary.btn-block(value='Create League', type='submit', data-bind='click: createLeague')
+              

@@ -2,9 +2,38 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var League = require('../models/league');
+var stripe = require("stripe")("sk_test_wWPYueXqxHLRnOxiA37wtRXE");
+
 var Match = require('../models/match');
 var Config = require('../models/config');
 var Pick = require('../models/pick');
+
+router.post('/stripePayment', requiresLogin, (req, res, next) => {
+  const token = req.body.stripeToken; // Using Express
+  let myGuid = guid();
+
+  stripe.charges.create({
+    amount: req.body.amount * 100,
+    currency: "gbp",
+    source: token, // obtained with Stripe.js
+    description: "Last Man Standing"
+  }, {
+    idempotency_key: myGuid
+  }, function(err, charge) {
+    if (err) {
+      res.json(500, "Stripe error");
+    } else {
+      if (charge.status == 'succeeded') {
+        res.json(200, {success: true});
+      } else {
+        res.json(500, "Stripe error");
+      }
+    }
+    console.log(charge);
+    console.log(err);
+  });
+})
+
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
@@ -38,7 +67,7 @@ router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
       next(err);
     } else {
       let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
-
+      
       Config.findOne({ }, function (err, config) {
         Match.find({ matchday: config.match_day }, function (err, matches) {
           Pick.find({ match_day: config.match_day, userId: req.session.userId, leagueId: league._id }, function (err, pick) {
@@ -55,10 +84,12 @@ router.get('/settings', requiresLogin, function(req, res, next) {
 });
 
 router.get('/create-league', requiresLogin, function(req, res, next) {
-  res.render('create-league', { title: 'Create League', route: req.route.path });
+  console.log(req.session.email);
+  res.render('create-league', { title: 'Create League', route: req.route.path, userEmail: req.session.email });
 });
 
 router.get('/join-league', requiresLogin, function(req, res, next) {
+
   League.find({ isPublic: true }, function (err, leagues) {
     res.render('join-league', { title: 'Join League', route: req.route.path, leagues: leagues });
   })
@@ -92,6 +123,7 @@ router.post('/login-user', function(req, res, next) {
       res.json(500, "Wrong email or password");
     } else {
       req.session.userId = user._id;
+      req.session.email = user.email;
       res.json(200, {success: true});
     }
   });
@@ -117,6 +149,7 @@ router.post('/create-user', function(req, res, next) {
       if (error) {
         res.json(500, error);
       } else {
+        req.session.email = user.email;
         req.session.userId = user._id;
         res.json(200, {success: true});
       }
