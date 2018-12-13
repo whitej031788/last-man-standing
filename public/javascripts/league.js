@@ -5,7 +5,9 @@ function leagueObj() {
   this.success = ko.observable('');
   this.userEmail = ko.observable(document.getElementById('userEmail').value);
   this.weekSelection = ko.observable('');
-  this.matchdaySelect = ko.observable();
+  this.matchdaySelect = ko.observable(parseInt(document.getElementById('matchDay').value));
+  this.currentMatchWeek = ko.observable(parseInt(document.getElementById('matchDay').value));
+  this.currentMatches = ko.observableArray();
 
   this.joinLeaguePriv = function() {
     let self = this;
@@ -33,14 +35,54 @@ function leagueObj() {
         self.error('Something went wrong! Please contact support');
         console.log(err);
       }
-    });    
+    });
   }
 
-  this.makePick = function(team, matchday) {
+  this.getLeagueByMatchWeek = function(matchWeek) {
+    let self = this;
+    $.ajax({
+      url: "/get-matches-by-week",
+      type: "POST",
+      data: JSON.stringify({week: matchWeek}),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(data) {
+        if (data.success) {
+          self.currentMatches(data.matches);
+        } else {
+          self.error("That code is not correct, or you don't have permission to join this league");
+        }
+        console.log(data);
+      },
+      error: function(err) {
+        self.error(err.responseText);
+        console.log(err);
+      },
+      failure: function(err) {
+        self.error('Something went wrong! Please contact support');
+        console.log(err);
+      }
+    });
+  }
+
+  this.nextPage = function() {
     let self = this;
 
-    self.weekSelection(team);
-    self.matchdaySelect(matchday);
+    self.currentMatchWeek(self.currentMatchWeek() + 1);
+    self.getLeagueByMatchWeek(self.currentMatchWeek());
+  }
+
+  this.prevPage = function() {
+    let self = this;
+
+    self.currentMatchWeek(self.currentMatchWeek() - 1);
+    self.getLeagueByMatchWeek(self.currentMatchWeek());
+  }
+
+  this.makePick = function(type) {
+    let myTeam = this[type];
+    window.knockoutObj.weekSelection(myTeam);
+    // self.matchdaySelect(matchday);
     $("#confirmSelect").modal();
   }
 
@@ -72,7 +114,10 @@ function leagueObj() {
       }
     });
   }
+
+  this.getLeagueByMatchWeek(this.matchdaySelect());
 }
 
 let myObj = new leagueObj();
+window.knockoutObj = myObj;
 ko.applyBindings(myObj, $('.container.child')[0]);
