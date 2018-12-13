@@ -2,8 +2,7 @@ extends layout-logged-in.pug
 
 block content-child
   .container.child
-  .image-block
-    img.imagefit2#IdName(src="images/Football-Crazy.jpg" alt="LMS")
+    input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
     .row
       .col-12.text-center
         h2
@@ -42,3 +41,8 @@ block content-child
                   input(name='public', type='checkbox', style='margin-right:5px;', data-bind='checked: isPublic')
                   |  League is public
               input.btn.btn-lg.btn-primary.btn-block(value='Create League', type='submit', data-bind='click: createLeague')
+<<<<<<< HEAD
+=======
+    .my-overlay(data-bind='visible: isSubmitting')
+
+>>>>>>> f2793bebd960ac1cf815c1d8fbcf129052ab9f7c

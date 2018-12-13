@@ -1,6 +1,7 @@
 extends layout.pug
 
 block content
+  script(src="https://checkout.stripe.com/checkout.js")
   nav.navbar.navbar-expand-lg.navbar-light.bg-light#lmsNavBar
     a.navbar-brand(href='#') LMS
     button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
