@@ -31,39 +31,43 @@ function createLeagueObj() {
     }
 
     self.openStripeCheckout();
+  }
 
-    // $.ajax({
-    //   url: "/create-league",
-    //   type: "POST",
-    //   data: self.serializeData(),
-    //   contentType: "application/json",
-    //   dataType: "json",
-    //   success: function(data) {
-    //     if (data.success) {
-    //       self.success("Your league has been created, and you have been added to it.");
-    //       self.leagueId(data.league_id);
-    //       if (data.joinCode) {
-    //         self.joinCode(data.joinCode);
-    //       }
-    //     } else {
-    //       self.error('Something went wrong! Please contact support');
-    //     }
-    //     console.log(data);
-    //   },
-    //   error: function(err) {
-    //     if (err.responseJSON && err.responseJSON.code == 11000) {
-    //       self.error('A league with that name already exists. Please try another name');
-    //        // Duplicate league name
-    //     } else {
-    //       self.error('Something went wrong! Please contact support');
-    //     }
-    //     console.log(err);
-    //   },
-    //   failure: function(err) {
-    //     self.error('Something went wrong! Please contact support');
-    //     console.log(err);
-    //   }
-    // });
+  this.postLeagueData = function() {
+    let self = this;
+    
+    $.ajax({
+      url: "/create-league",
+      type: "POST",
+      data: self.serializeData(),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(data) {
+        if (data.success) {
+          self.success("Your league has been created, and you have been added to it.");
+          self.leagueId(data.league_id);
+          if (data.joinCode) {
+            self.joinCode(data.joinCode);
+          }
+        } else {
+          self.error('Something went wrong! Please contact support');
+        }
+        console.log(data);
+      },
+      error: function(err) {
+        if (err.responseJSON && err.responseJSON.code == 11000) {
+          self.error('A league with that name already exists. Please try another name');
+           // Duplicate league name
+        } else {
+          self.error('Something went wrong! Please contact support');
+        }
+        console.log(err);
+      },
+      failure: function(err) {
+        self.error('Something went wrong! Please contact support');
+        console.log(err);
+      }
+    });
   }
 
   this.serializeData = function() {
@@ -98,7 +102,7 @@ function createLeagueObj() {
           dataType: "json",
           success: function(data) {
             if (data.success) {
-
+              window.knockoutObj.postLeagueData();
             }
           },
           error: function(err) {
