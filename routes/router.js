@@ -4,6 +4,10 @@ var User = require('../models/user');
 var League = require('../models/league');
 var stripe = require("stripe")("sk_test_wWPYueXqxHLRnOxiA37wtRXE");
 
+var Match = require('../models/match');
+var Config = require('../models/config');
+var Pick = require('../models/pick');
+
 router.post('/stripePayment', requiresLogin, (req, res, next) => {
   const token = req.body.stripeToken; // Using Express
   let myGuid = guid();
@@ -30,16 +34,25 @@ router.post('/stripePayment', requiresLogin, (req, res, next) => {
   });
 })
 
+
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
 });
 
 router.get('/register', function(req, res, next) {
-  res.render('register', { title: 'Register', route: req.route.path });
+  if (!req.session.userId) {
+    res.render('register', { title: 'Register', route: req.route.path });
+  } else {
+    res.redirect('/main');
+  }
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Login', route: req.route.path });
+  if (!req.session.userId) {
+    res.render('login', { title: 'Login', route: req.route.path });
+  } else {
+    res.redirect('/main');
+  }
 });
 
 router.get('/main', requiresLogin, function(req, res, next) {
@@ -55,7 +68,13 @@ router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
     } else {
       let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
       
-      res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague, userEmail: req.session.email });
+      Config.findOne({ }, function (err, config) {
+        Match.find({ matchday: config.match_day }, function (err, matches) {
+          Pick.find({ match_day: config.match_day, userId: req.session.userId, leagueId: league._id }, function (err, pick) {
+            res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague, matches: matches, pick: pick, matchDay: config.match_day });
+          });
+        });
+      });
     }
   });
 });
@@ -70,7 +89,10 @@ router.get('/create-league', requiresLogin, function(req, res, next) {
 });
 
 router.get('/join-league', requiresLogin, function(req, res, next) {
-  res.render('join-league', { title: 'Join League', route: req.route.path, userEmail: req.session.email });
+
+  League.find({ isPublic: true }, function (err, leagues) {
+    res.render('join-league', { title: 'Join League', route: req.route.path, leagues: leagues });
+  })
 });
 
 router.get('/rules', requiresLogin, function(req, res, next) {
@@ -137,7 +159,7 @@ router.post('/create-user', function(req, res, next) {
   }
 });
 
-router.post('/create-league', function(req, res, next) {
+router.post('/create-league', requiresLogin, function(req, res, next) {
 
   if (req.body.name &&
     req.body.maxPlayers &&
@@ -170,7 +192,32 @@ router.post('/create-league', function(req, res, next) {
   }
 });
 
-router.post('/join-league', function(req, res, next) {
+router.post('/make-pick', requiresLogin, function(req, res, next) {
+
+  if (req.body.team &&
+    req.body.matchDay &&
+    req.body.leagueId) {
+
+    var pickData = {
+      team: req.body.team,
+      match_day: req.body.matchDay,
+      userId: req.session.userId,
+      leagueId: req.body.leagueId
+    }
+
+    Pick.create(pickData, function (error, pick) {
+      if (error) {
+        res.json(500, error);
+      } else {
+        res.json(200, {success: true});
+      }
+    });
+  } else {
+    res.json(500, 'All fields required');
+  }
+});
+
+router.post('/join-league', requiresLogin, function(req, res, next) {
   if (!req.body.leagueId) {
     res.json(500, "We did not get a league ID");
   } else {

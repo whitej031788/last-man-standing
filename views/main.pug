@@ -3,5 +3,17 @@ extends layout-logged-in.pug
 block content-child
   .container.child
     .row
-      .col-4 Summary
-      .col-8 Leagues currently in
+      .col-12.text-center
+        .image-block
+          h3 Think you know more about football than your mates?
+          h1 PROVE IT!
+          img.className#IdName(src="FootyCover.jpg" alt="LMS")
+    .row
+      .col-8.offset-2
+        h1 How To Get Started
+        p 1) Register Your Team - Invite up to X players
+        p 2) Join A League - Or create your own
+        p 3) Pay Up - Winner takes the pot
+        p.mb-4 4) Talk Shit - Or lay low depending how well you do
+        a(href="/create-league")
+          button(type="button") Let's Get Started

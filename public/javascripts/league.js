@@ -4,6 +4,8 @@ function leagueObj() {
   this.error = ko.observable('');
   this.success = ko.observable('');
   this.userEmail = ko.observable(document.getElementById('userEmail').value);
+  this.weekSelection = ko.observable('');
+  this.matchdaySelect = ko.observable();
 
   this.joinLeaguePriv = function() {
     let self = this;
@@ -32,6 +34,43 @@ function leagueObj() {
         console.log(err);
       }
     });    
+  }
+
+  this.makePick = function(team, matchday) {
+    let self = this;
+
+    self.weekSelection(team);
+    self.matchdaySelect(matchday);
+    $("#confirmSelect").modal();
+  }
+
+  this.confirmPick = function() {
+    let self = this;
+    $("#confirmSelect").modal('toggle');
+    $.ajax({
+      url: "/make-pick",
+      type: "POST",
+      data: JSON.stringify({team: self.weekSelection(), matchDay: self.matchdaySelect(), leagueId: self.leagueId()}),
+      contentType: "application/json",
+      dataType: "json",
+      success: function(data) {
+        if (data.success) {
+          alert("Your pick has been recorded. Good luck!");
+          window.location.reload();
+        } else {
+          self.error("An error occurred");
+        }
+        console.log(data);
+      },
+      error: function(err) {
+        self.error(err.responseText);
+        console.log(err);
+      },
+      failure: function(err) {
+        self.error('Something went wrong! Please contact support');
+        console.log(err);
+      }
+    });
   }
 }
 
