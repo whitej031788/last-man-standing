@@ -2,14 +2,17 @@ extends layout-logged-in.pug
 
 block content-child
   .container.child
+  .image-block
+    img.imagefit2#IdName(src="images/Football-Crazy.jpg" alt="LMS")
     .row
       .col-12.text-center
-        h2 Create a League
-      .col-8.offset-2.mb-2
-        p 
-        | You can create either a private or public league. If you create a private league, 
+        h2
+          span.text-underline League Manager
+    .col-8.offset-2.text-center
+      p.text-underline
+        | You can create either a private or public league. If you create a private league,
         | you will be given a random password and a link, which can be sent to whoever you want to join.
-        | If you create a public league, anyone will be able to join it from their dashboard, up until
+        | If you create a public league, anyone can join it from their dashboard, up until
         | it has reached its maximum participants.
     .row
       .col-8.offset-2
