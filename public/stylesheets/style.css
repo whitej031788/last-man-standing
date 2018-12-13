@@ -13,6 +13,22 @@
    border-width: 3px;
    border-color: #F05F40;
  }
+ .team-pick {
+   border: 2px solid rgba(0,0,0,.28);
+   margin-bottom: 8px;
+   cursor:pointer;
+   transition: 0.3s;
+   padding: 6px;
+ }
+ .strong {
+   font-weight: 900;
+ }
+
+ .team-pick:hover {
+  background-color: #3e8e41;
+  color: rgb(255, 81, 42);
+  font-weight: bold;
+}
  
  hr.light {
    border-color: #fff;

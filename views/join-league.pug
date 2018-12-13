@@ -3,3 +3,25 @@ extends layout-logged-in.pug
 block content-child
   .container.child
     .row
+      .col-12.text-center
+        h2 Public Leagues
+        .card.card-body
+          .alert-danger.mb-2(data-bind="visible: error, text: error")
+          table.table
+            thead
+              tr
+                th(scope='col') League Name
+                th(scope='col') # Players
+                th(scope='col') Max Players
+                th(scope='col') Join Fee
+                th(scope='col') Join Now
+            tbody
+              each league in leagues
+                tr
+                  th(scope='row')= league.name
+                  td= league.players.length
+                  td= league.maxPlayers
+                  td= league.joinFee
+                  td
+                    input.btn.btn-sm.btn-primary.btn-block(value='Join League', type='submit', data-bind="click: joinLeague.bind($data, '" + league._id + "')")
+
