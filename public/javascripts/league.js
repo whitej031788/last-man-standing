@@ -49,7 +49,7 @@ function leagueObj() {
     $.ajax({
       url: "/make-pick",
       type: "POST",
-      data: JSON.stringify({team: self.weekSelection(), matchDay: self.matchdaySelect()}),
+      data: JSON.stringify({team: self.weekSelection(), matchDay: self.matchdaySelect(), leagueId: self.leagueId()}),
       contentType: "application/json",
       dataType: "json",
       success: function(data) {

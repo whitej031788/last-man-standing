@@ -11,11 +11,19 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/register', function(req, res, next) {
-  res.render('register', { title: 'Register', route: req.route.path });
+  if (!req.session.userId) {
+    res.render('register', { title: 'Register', route: req.route.path });
+  } else {
+    res.redirect('/main');
+  }
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'Login', route: req.route.path });
+  if (!req.session.userId) {
+    res.render('login', { title: 'Login', route: req.route.path });
+  } else {
+    res.redirect('/main');
+  }
 });
 
 router.get('/main', requiresLogin, function(req, res, next) {
@@ -33,7 +41,7 @@ router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
 
       Config.findOne({ }, function (err, config) {
         Match.find({ matchday: config.match_day }, function (err, matches) {
-          Pick.find({ match_day: config.match_day, userId: req.session.userId }, function (err, pick) {
+          Pick.find({ match_day: config.match_day, userId: req.session.userId, leagueId: league._id }, function (err, pick) {
             res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague, matches: matches, pick: pick, matchDay: config.match_day });
           });
         });
@@ -51,7 +59,9 @@ router.get('/create-league', requiresLogin, function(req, res, next) {
 });
 
 router.get('/join-league', requiresLogin, function(req, res, next) {
-  res.render('join-league', { title: 'Join League', route: req.route.path });
+  League.find({ isPublic: true }, function (err, leagues) {
+    res.render('join-league', { title: 'Join League', route: req.route.path, leagues: leagues });
+  })
 });
 
 router.get('/rules', requiresLogin, function(req, res, next) {
@@ -152,12 +162,14 @@ router.post('/create-league', requiresLogin, function(req, res, next) {
 router.post('/make-pick', requiresLogin, function(req, res, next) {
 
   if (req.body.team &&
-    req.body.matchDay) {
+    req.body.matchDay &&
+    req.body.leagueId) {
 
     var pickData = {
       team: req.body.team,
       match_day: req.body.matchDay,
-      userId: req.session.userId
+      userId: req.session.userId,
+      leagueId: req.body.leagueId
     }
 
     Pick.create(pickData, function (error, pick) {

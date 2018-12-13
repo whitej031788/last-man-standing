@@ -18,6 +18,12 @@ var PickSchema = new mongoose.Schema({
     unique: false,
     required: true,
     trim: true
+  },
+  leagueId: {
+    type: String,
+    unique: false,
+    required: true,
+    trim: true
   }
 });
 
