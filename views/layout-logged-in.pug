@@ -4,7 +4,7 @@ block content
   script(src="https://checkout.stripe.com/checkout.js")
   nav.navbar.navbar-expand-lg.navbar-light.bg-light#lmsNavBar
     a.navbar-brand(href='#')
-      img(src="images/cropped-MW.jpg" style="height: 40px;")
+      img(src="/images/cropped-MW.jpg" style="height: 40px;")
     button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
       span.navbar-toggler-icon
     
@@ -12,6 +12,8 @@ block content
       ul.navbar-nav.mr-auto
         li.nav-item(data-bind="css: { active: activeNav() == 'main' }")
           a.nav-link(href='/main') Home
+        li.nav-item(data-bind="css: { active: activeNav() == 'your-leagues' }")
+          a.nav-link(href='/your-leagues') Your Leagues
         li.nav-item(data-bind="css: { active: activeNav() == 'join-league' }")
           a.nav-link(href='/join-league') Join League
         li.nav-item(data-bind="css: { active: activeNav() == 'create-league' }")

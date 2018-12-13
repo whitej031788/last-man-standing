@@ -100,6 +100,18 @@ router.get('/join-league', requiresLogin, function(req, res, next) {
   })
 });
 
+router.get('/your-leagues', requiresLogin, function(req, res, next) {
+  League.find({ }, function (err, leagues) {
+    let finalLagues = [];
+    for (let i = 0; i < leagues.length; i++) {
+      if (leagues[i].players.indexOf(req.session.userId) !== -1) {
+        finalLagues.push(leagues[i]);
+      }
+    }
+    res.render('your-leagues', { title: 'Your Leagues', route: req.route.path, leagues: finalLagues, userEmail: req.session.email });
+  })
+});
+
 router.get('/rules', requiresLogin, function(req, res, next) {
   res.render('rules', { title: 'Rules', route: req.route.path });
 });
