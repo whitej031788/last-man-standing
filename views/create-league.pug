@@ -5,12 +5,13 @@ block content-child
     input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
     .row
       .col-12.text-center
-        h2 Create a League
-      .col-8.offset-2.mb-2
-        p 
-        | You can create either a private or public league. If you create a private league, 
+        h2
+          span.text-underline League Manager
+    .col-8.offset-2.text-center
+      p.text-underline
+        | You can create either a private or public league. If you create a private league,
         | you will be given a random password and a link, which can be sent to whoever you want to join.
-        | If you create a public league, anyone will be able to join it from their dashboard, up until
+        | If you create a public league, anyone can join it from their dashboard, up until
         | it has reached its maximum participants.
     .row
       .col-8.offset-2
@@ -40,5 +41,8 @@ block content-child
                   input(name='public', type='checkbox', style='margin-right:5px;', data-bind='checked: isPublic')
                   |  League is public
               input.btn.btn-lg.btn-primary.btn-block(value='Create League', type='submit', data-bind='click: createLeague')
+<<<<<<< HEAD
+=======
     .my-overlay(data-bind='visible: isSubmitting')
-              
+
+>>>>>>> f2793bebd960ac1cf815c1d8fbcf129052ab9f7c
