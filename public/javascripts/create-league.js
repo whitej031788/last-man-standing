@@ -117,7 +117,7 @@ function createLeagueObj() {
 
     // Open Checkout with further options:
     stripe.open({
-      name: 'Last Man Standing',
+      name: 'Must Win',
       description: 'You have to pay the entrance fee',
       currency: 'gbp',
       amount: self.joinFee() * 100,
