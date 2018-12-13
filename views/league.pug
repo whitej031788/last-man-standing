@@ -4,6 +4,7 @@ block content-child
   .container.child
     input(type="hidden" name="leagueId" id="myLeagueId" value=league._id)
     input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
+    input(type="hidden" name="matchDay" id="matchDay" value=matchDay)
     if isValid
       .row 
         .col-lg-4
@@ -22,11 +23,22 @@ block content-child
           .col-lg-8
             p Select your pick for the next match week; make sure to pick early, as this match week closes just before the first game kicks off!
             .card.card-body
-              each match in matches
-                .row.text-center
-                  .col-5.team-pick(data-bind="click: makePick.bind($data, '" + match.home_team + "', " + match.matchday + ")")= match.home_team
-                  .col-2= ' VS '
-                  .col-5.team-pick(data-bind="click: makePick.bind($data, '" + match.away_team + "', " + match.matchday + ")")= match.away_team
+              .row
+                .col-12.text-center
+                  h4(data-bind="text: 'Match week ' + currentMatchWeek()")
+                .col-6(style="text-align:right;")
+                  i.fas.fa-arrow-left.my-arrows(data-bind="visible: currentMatchWeek() != matchdaySelect(), click: prevPage")
+                .col-6(style="text-align:left;")
+                  i.fas.fa-arrow-right.my-arrows(data-bind="visible: currentMatchWeek() < matchdaySelect() + 2, click: nextPage")
+                .col-12
+                  .row.text-center.fade-time-it(data-bind="visible: currentMatchWeek() == matchdaySelect(), foreach: currentMatches")
+                    .col-5.team-pick(data-bind="click: $parent.makePick.bind($data,'home_team'), text: home_team")
+                    .col-2= ' VS '
+                    .col-5.team-pick(data-bind="click: $parent.makePick.bind($data,'away_team'), text: away_team")
+                  .row.text-center.fade-time-it(data-bind="visible: currentMatchWeek() != matchdaySelect(), foreach: currentMatches")
+                    .col-5(data-bind="text: home_team")
+                    .col-2= ' VS '
+                    .col-5(data-bind="text: away_team")
         else
           .col-lg-8
             .card.card-body

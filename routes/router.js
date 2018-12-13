@@ -146,6 +146,16 @@ router.post('/login-user', function(req, res, next) {
   });
 });
 
+router.post('/get-matches-by-week', requiresLogin, function(req, res, next) {
+  Match.find({ matchday: req.body.week }, function (err, matches) {
+    if (err || !matches) {
+      res.json(500, "Wrong match request");
+    } else {
+      res.json(200, {success: true, matches: matches});
+    }
+  });
+});
+
 router.post('/create-user', function(req, res, next) {
   // confirm that user typed same password twice
   if (req.body.password !== req.body.passwordConf) {
