@@ -21,8 +21,8 @@ function createLeagueObj() {
       self.error('Please enter a league name, and it must be a name longer than 5 characters');
       return;
     }
-    if (!self.joinFee()) {
-      self.error('Please enter a joining fee');
+    if (!self.joinFee() || self.joinFee() < 5) {
+      self.error('Please enter a joining fee 5 or more');
       return;
     }
     if (!self.maxPlayers()) {
@@ -81,55 +81,47 @@ function createLeagueObj() {
 
   this.openStripeCheckout = function() {
     let self = this;
+
+    let stripe = StripeCheckout.configure({
+      key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
+      image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+      locale: 'auto',
+      token: function(token) {
+        console.log(token)
+        // You can access the token ID with `token.id`.
+        // Get the token ID to your server-side code for use.
+          $.ajax({
+          url: "/stripePayment",
+          type: "POST",
+          data: JSON.stringify({amount: window.knockoutObj.joinFee(), stripeToken: token.id}),
+          contentType: "application/json",
+          dataType: "json",
+          success: function(data) {
+            if (data.success) {
+
+            }
+          },
+          error: function(err) {
+            console.log(err);
+          },
+          failure: function(err) {
+            console.log(err);
+          }
+        });
+      }
+    });
+
     // Open Checkout with further options:
-      self.stripeHandler.open({
-        name: 'Last Man Standing',
-        description: 'You have to pay the entrance fee',
-        currency: 'gbp',
-        amount: self.joinFee() * 100,
-        email: self.userEmail()
-      });
-    e.preventDefault();
-  }
-this.stripeHandler = StripeCheckout.configure({
-    key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
-    image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
-    locale: 'auto',
-    token: function(token) {
-      console.log(token)
-      // You can access the token ID with `token.id`.
-      // Get the token ID to your server-side code for use.
-        $.ajax({
-        url: "/stripeCheckout",
-        type: "POST",
-        data: self.serializeStripeData(token.id),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(data) {
-          console.log(data);
-        },
-        error: function(err) {
-          console.log(err);
-        },
-        failure: function(err) {
-          console.log(err);
-        }
-      });
-    }
-  });
-
-  this.serializeStripeData = function(token) {
-    let self = this;
-    let obj = {};
-
-    obj.amount = self.joinFee().trim();
-    obj.token = token;
-
-    return JSON.stringify(obj);
+    stripe.open({
+      name: 'Last Man Standing',
+      description: 'You have to pay the entrance fee',
+      currency: 'gbp',
+      amount: self.joinFee() * 100,
+      email: self.userEmail()
+    });
   }
 }
 
-
-
 let newObj = new createLeagueObj();
+window.knockoutObj = newObj;
 ko.applyBindings(newObj, $('.container.child')[0]);

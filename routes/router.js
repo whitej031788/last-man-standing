@@ -5,15 +5,29 @@ var League = require('../models/league');
 var stripe = require("stripe")("sk_test_wWPYueXqxHLRnOxiA37wtRXE");
 
 router.post('/stripePayment', requiresLogin, (req, res, next) => {
-  const token = request.body.stripeToken; // Using Express
+  const token = req.body.stripeToken; // Using Express
+  let myGuid = guid();
 
-  const charge = stripe.charges.create({
-    amount: req.body.amount,
-    currency: 'gbp',
-    description: 'Example charge',
-    source: req.body.token
+  stripe.charges.create({
+    amount: req.body.amount * 100,
+    currency: "gbp",
+    source: token, // obtained with Stripe.js
+    description: "Last Man Standing"
+  }, {
+    idempotency_key: myGuid
+  }, function(err, charge) {
+    if (err) {
+      res.json(500, "Stripe error");
+    } else {
+      if (charge.status == 'succeeded') {
+        res.json(200, {success: true});
+      } else {
+        res.json(500, "Stripe error");
+      }
+    }
+    console.log(charge);
+    console.log(err);
   });
-
 })
 
 router.get('/', function(req, res, next) {
