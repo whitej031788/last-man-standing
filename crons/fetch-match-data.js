@@ -29,7 +29,7 @@ var req = https.request(options, function(res) {
 
   res.on('end', function(){
     let myEnd = JSON.parse(response);
-    storeAppConfig(myEnd.currentSeason.currentMatchday + 1);
+    storeAppConfig(myEnd.currentSeason.currentMatchday);
     getAddMatches(myEnd.currentSeason.currentMatchday, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 1, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 2, leagueId, options);
@@ -38,7 +38,7 @@ var req = https.request(options, function(res) {
 
   res.on('close', function(){
     let myEnd = JSON.parse(response);
-    storeAppConfig(myEnd.currentSeason.currentMatchday + 1);
+    storeAppConfig(myEnd.currentSeason.currentMatchday);
     getAddMatches(myEnd.currentSeason.currentMatchday, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 1, leagueId, options);
     getAddMatches(myEnd.currentSeason.currentMatchday + 2, leagueId, options);
