@@ -17,10 +17,7 @@ var UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  },
-  league: {
-    type: Array
-  },
+  }
 });
 
 //authenticate input against database

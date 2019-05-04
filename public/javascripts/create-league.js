@@ -2,6 +2,7 @@ function createLeagueObj() {
   this.error = ko.observable('');
   this.success = ko.observable('');
   this.name = ko.observable('');
+  this.joinFee = ko.observable('');
   this.maxPlayers = ko.observable('');
   this.isPublic = ko.observable(false);
   this.selectedLeague = ko.observable('');
@@ -21,12 +22,16 @@ function createLeagueObj() {
       self.error('Please enter a league name, and it must be a name longer than 5 characters');
       return;
     }
+    if (!self.joinFee() || self.joinFee() < 5) {
+      self.error('Please enter a joining fee 5 or more');
+      return;
+    }
     if (!self.maxPlayers()) {
       self.error('Enter the maximum number of players');
       return;
     }
-    window.knockoutObj.postLeagueData();
-    // self.openStripeCheckout();
+
+    self.openStripeCheckout();
   }
 
   this.postLeagueData = function() {
@@ -57,8 +62,7 @@ function createLeagueObj() {
           self.error('A league with that name already exists. Please try another name');
            // Duplicate league name
         } else {
-          console.log(err.responseJSON);
-          self.error('Something went wrong! Please contact support at support@mustwin.com');
+          self.error('Something went wrong! Please contact support');
         }
         console.log(err);
       },
@@ -75,6 +79,7 @@ function createLeagueObj() {
     let obj = {};
 
     obj.name = self.name().trim();
+    obj.joinFee = self.joinFee().trim();
     obj.maxPlayers = self.maxPlayers().trim();
     obj.isPublic = self.isPublic();
     obj.league = self.selectedLeague().trim().replace(/\s+/g, '-').toLowerCase();
@@ -82,48 +87,48 @@ function createLeagueObj() {
     return JSON.stringify(obj);
   }
 
-  // this.openStripeCheckout = function() {
-  //   let self = this;
+  this.openStripeCheckout = function() {
+    let self = this;
 
-    // let stripe = StripeCheckout.configure({
-    //   key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
-    //   locale: 'auto',
-    //   token: function(token) {
+    let stripe = StripeCheckout.configure({
+      key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
+      locale: 'auto',
+      token: function(token) {
 
-    //     console.log(token)
-    //     window.knockoutObj.isSubmitting(true);
-    //     // You can access the token ID with `token.id`.
-    //     // Get the token ID to your server-side code for use.
-    //       $.ajax({
-    //       url: "/stripePayment",
-    //       type: "POST",
-    //       data: JSON.stringify({amount: window.knockoutObj.joinFee(), stripeToken: token.id}),
-    //       contentType: "application/json",
-    //       dataType: "json",
-    //       success: function(data) {
-    //         if (data.success) {
-    //           window.knockoutObj.postLeagueData();
-    //         }
-    //       },
-    //       error: function(err) {
-    //         console.log(err);
-    //       },
-    //       failure: function(err) {
-    //         console.log(err);
-    //       }
-    //     });
-    //   }
-    // });
+        console.log(token)
+        window.knockoutObj.isSubmitting(true);
+        // You can access the token ID with `token.id`.
+        // Get the token ID to your server-side code for use.
+          $.ajax({
+          url: "/stripePayment",
+          type: "POST",
+          data: JSON.stringify({amount: window.knockoutObj.joinFee(), stripeToken: token.id}),
+          contentType: "application/json",
+          dataType: "json",
+          success: function(data) {
+            if (data.success) {
+              window.knockoutObj.postLeagueData();
+            }
+          },
+          error: function(err) {
+            console.log(err);
+          },
+          failure: function(err) {
+            console.log(err);
+          }
+        });
+      }
+    });
 
     // Open Checkout with further options:
-  //   stripe.open({
-  //     name: 'Must Win',
-  //     description: 'You have to pay the entrance fee',
-  //     currency: 'gbp',
-  //     amount: self.joinFee() * 100,
-  //     email: self.userEmail()
-  //   });
-  // }
+    stripe.open({
+      name: 'Must Win',
+      description: 'You have to pay the entrance fee',
+      currency: 'gbp',
+      amount: self.joinFee() * 100,
+      email: self.userEmail()
+    });
+  }
 }
 
 let newObj = new createLeagueObj();

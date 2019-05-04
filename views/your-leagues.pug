@@ -12,12 +12,17 @@ block content-child
               tr
                 th(scope='col') League Name
                 th(scope='col') # Players
+                th(scope='col') League Status
+                th(scope='col') Your Status
+                th(scope='col') Join Fee
                 th(scope='col') League Page
             tbody
               each league in leagues
                 tr
                   th(scope='row')= league.name
                   td= league.players.length
+                  td(style="color: green;font-weight:bold;") In Progress
+                  td(style="color: green;font-weight:bold;") Still in it!
+                  td= league.joinFee
                   td
                     input.btn.btn-sm.btn-primary.btn-block(value='Go to League', type='submit', data-bind="click: goToLeague.bind($data, '" + league._id + "')")
-  

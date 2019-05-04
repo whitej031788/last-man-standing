@@ -5,8 +5,14 @@ block content-child
     input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
     .row
       .col-12.text-center
-        h2 Create League
+        h2
+          span.text-underline League Manager
     .col-8.offset-2.text-center
+      p.text-underline
+        | You can create either a private or public league. If you create a private league,
+        | you will be given a random password and a link, which can be sent to whoever you want to join.
+        | If you create a public league, anyone can join it from their dashboard, up until
+        | it has reached its maximum participants.
     .row
       .col-8.offset-2
         .card.card-body
@@ -24,6 +30,8 @@ block content-child
             fieldset
               .form-group.has-error.half-width-form-control
                 input.form-control.input-lg(placeholder='League Name', name='name', type='text', data-bind='value: name')
+              .form-group.has-error
+                input.form-control.input-lg(placeholder='Joining Fee', name='fee', type='number', data-bind='value: joinFee')
               .form-group.has-success
                 input.form-control.input-lg(placeholder='Max Players', name='max', type='number', data-bind='value: maxPlayers')
               .form-group.has-success

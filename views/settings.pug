@@ -1,0 +1,23 @@
+extends layout-logged-in.pug
+
+block scripts-add
+  link(href='/stylesheets/style2.css', rel='stylesheet', type='text/css')
+
+block content-child
+  .container.child
+  .image-block
+    img.imagefit2#IdName(src="images/Football-Crazy.jpg" alt="LMS")
+    .row
+      p
+      .col-8.offset-2
+        form
+        .form-container
+          .personal-information
+            h3 Bank Information
+            p  
+          input#column-left(type='text', name='first-name', placeholder='First Name')
+          input#column-right(type='text', name='last-name', placeholder='Last Name')
+          input#column-left(type='text', name='number', placeholder='Sort Code')
+          input#column-right(type='text', name='expiry date', placeholder='Account Number')
+          .card-wrapper
+          input#input-button(type='submit', value='Submit')

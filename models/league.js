@@ -13,6 +13,12 @@ var LeagueSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  joinFee: {
+    type: Number,
+    unique: false,
+    required: true,
+    trim: true
+  },
   isPublic: {
     type: Boolean,
     unique: false,
