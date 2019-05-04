@@ -4,7 +4,6 @@ block content-child
   .container.child
     input(type="hidden" name="leagueId" id="myLeagueId" value=league._id)
     input(type="hidden" name="userEmail" id="userEmail" value=userEmail)
-    input(type="hidden" name="matchDay" id="matchDay" value=matchDay)
     if isValid
       .row 
         .col-lg-4
@@ -13,81 +12,7 @@ block content-child
             tr
               td Number players: 
               td #{league.players.length}
-            tr
-              td League fee: 
-              td #{league.joinFee}
-            tr
-              td Match week: 
-              td #{matchDay}
-        if !pick.length
-          .col-lg-8
-            p Select your pick for the next match week; make sure to pick early, as this match week closes just before the first game kicks off!
-            .card.card-body
-              .row
-                .col-12.text-center
-                  h4(data-bind="text: 'Match week ' + currentMatchWeek()")
-                .col-6(style="text-align:right;")
-                  i.fas.fa-arrow-left.my-arrows(data-bind="visible: currentMatchWeek() != matchdaySelect(), click: prevPage")
-                .col-6(style="text-align:left;")
-                  i.fas.fa-arrow-right.my-arrows(data-bind="visible: currentMatchWeek() < matchdaySelect() + 2, click: nextPage")
-                .col-12
-                  .row.text-center.fade-time-it(data-bind="visible: currentMatchWeek() == matchdaySelect(), foreach: currentMatches")
-                    .col-5.team-pick(data-bind="click: $parent.makePick.bind($data,'home_team'), text: home_team")
-                    .col-2= ' VS '
-                    .col-5.team-pick(data-bind="click: $parent.makePick.bind($data,'away_team'), text: away_team")
-                  .row.text-center.fade-time-it(data-bind="visible: currentMatchWeek() != matchdaySelect(), foreach: currentMatches")
-                    .col-5(data-bind="text: home_team")
-                    .col-2= ' VS '
-                    .col-5(data-bind="text: away_team")
-        else
-          .col-lg-8
-            .card.card-body
-              p
-                | You have already picked 
-                span.strong #{pick[0].team} 
-                | this week. Good luck!
-              each match in matches
-                .row.text-center
-                  .col-5= match.home_team
-                  .col-2= ' VS '
-                  .col-5= match.away_team
-
-    else
       .row 
         .col-12.text-center
           h2 #{league.name}
-        if league.isPublic
-          .col-8.offset-2.mb-2
-            p.mb-2
-              | You have arrived at a public league. Anyone can join, until the maximum league size has been met.
-              | Click below to join!
-            .card.card-body
-              .alert-danger.mb-2.pl-3(data-bind="visible: error, text: error")
-              fieldset
-              input.btn.btn-lg.btn-primary.btn-block(value='Join League', type='submit', data-bind='click: joinPubLeague')
-        else
-          .col-8.offset-2.mb-2
-            p.mb-2
-              | You have arrived at a private league. The administrator of this league should have given you a private code in order
-              | to join. Please enter the code below. If you do not have a code, please contact the league administrator.
-            .card.card-body
-              h3 Enter Code
-              .alert-danger.mb-2.pl-3(data-bind="visible: error, text: error")
-              fieldset
-              .form-group.has-error.half-width-form-control
-                input.form-control.input-lg(placeholder='League Code', name='code', type='text', data-bind='value: privLeagueCode')
-              input.btn.btn-lg.btn-primary.btn-block(value='Join League', type='submit', data-bind='click: joinLeaguePriv')
-
-    // Modal
-    #confirmSelect.modal.fade(role='dialog')
-      .modal-dialog
-        // Modal content
-        .modal-content
-          .modal-body
-            p 
-              | Please confirm you want to pick 
-              span.bold.strong(data-bind="text: weekSelection")
-              |. You will not be able to change this pick after confirming!
-            button.btn.btn-default.btn-success.btn-block(type='submit', data-bind="click: confirmPick")
-              span.glyphicon.glyphicon-off
-              |  Confirm
+          p #{league.players}

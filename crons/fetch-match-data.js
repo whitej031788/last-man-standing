@@ -4,7 +4,7 @@ const Config = require('../models/config');
 const mongoose = require('mongoose');
 
 //connect to MongoDB
-mongoose.connect('mongodb://localhost/last-man-standing');
+mongoose.connect('mongodb://localhost/fantasy-football');
 var db = mongoose.connection;
 
 // 2021 is the Premier League ID

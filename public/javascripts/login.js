@@ -16,7 +16,7 @@ function loginObj() {
       dataType: "json",
       success: function(data) {
         if (data.success) {
-          // Successful login
+          // Successful login -- direct
           window.location.href = "/main";
         } else {
           // Something went wrong, we need to show an error

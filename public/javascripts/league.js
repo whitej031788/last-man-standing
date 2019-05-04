@@ -5,8 +5,8 @@ function leagueObj() {
   this.success = ko.observable('');
   this.userEmail = ko.observable(document.getElementById('userEmail').value);
   this.weekSelection = ko.observable('');
-  this.matchdaySelect = ko.observable(parseInt(document.getElementById('matchDay').value));
-  this.currentMatchWeek = ko.observable(parseInt(document.getElementById('matchDay').value));
+  // this.matchdaySelect = ko.observable(parseInt(document.getElementById('matchDay').value));
+  // this.currentMatchWeek = ko.observable(parseInt(document.getElementById('matchDay').value));
   this.currentMatches = ko.observableArray();
 
   this.joinLeaguePriv = function() {
@@ -115,7 +115,7 @@ function leagueObj() {
     });
   }
 
-  this.getLeagueByMatchWeek(this.matchdaySelect());
+  // this.getLeagueByMatchWeek(this.matchdaySelect());
 }
 
 let myObj = new leagueObj();

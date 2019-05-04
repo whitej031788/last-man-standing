@@ -14,7 +14,7 @@ var app = express();
 app.use(bodyParser.json());
 
 //connect to MongoDB
-mongoose.connect('mongodb://localhost/last-man-standing');
+mongoose.connect('mongodb://localhost/fantasy-football');
 var db = mongoose.connection;
 
 //handle mongo error

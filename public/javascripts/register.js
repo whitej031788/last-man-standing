@@ -4,6 +4,7 @@ function signInObj() {
     this.regEmail = ko.observable('');
     this.fullName = ko.observable('');
     this.regPass = ko.observable('');
+    this.league = ko.observable('');
     this.regPassConf = ko.observable('');
     this.TOC = ko.observable(false);
 
@@ -38,9 +39,9 @@ function signInObj() {
         contentType: "application/json",
         dataType: "json",
         success: function(data) {
-          alert('Your account has been created! You will now be redirected to the dashboard');
+          alert('Your account has been created! You will now be redirected to the Login Page');
           setTimeout(function() {
-            window.location.href = "/main";
+            window.location.href = "/login";
           }, 200);
         },
         error: function(err) {
@@ -59,6 +60,7 @@ function signInObj() {
       obj.password = self.regPass().trim();
       obj.email = self.regEmail().trim();
       obj.name = self.fullName().trim();
+      obj.league = self.league().trim();
       return JSON.stringify(obj);
     }
   }

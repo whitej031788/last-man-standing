@@ -3,47 +3,9 @@ function joinObj() {
   this.userEmail = ko.observable(document.getElementById('userEmail').value);
   this.isSubmitting = ko.observable(false);
 
-  this.joinLeague = function(lId, joinFee) {
-      let self = this;
-  
-      let stripe = StripeCheckout.configure({
-        key: 'pk_test_MZc2ZHP9BRdzyj5Ak8SynFUr',
-        locale: 'auto',
-        token: function(token) {
-  
-          console.log(token)
-          window.knockoutObj.isSubmitting(true);
-          // You can access the token ID with `token.id`.
-          // Get the token ID to your server-side code for use.
-            $.ajax({
-            url: "/stripePayment",
-            type: "POST",
-            data: JSON.stringify({amount: joinFee, stripeToken: token.id}),
-            contentType: "application/json",
-            dataType: "json",
-            success: function(data) {
-              if (data.success) {
-                window.knockoutObj.postLeagueData(lId);
-              }
-            },
-            error: function(err) {
-              console.log(err);
-            },
-            failure: function(err) {
-              console.log(err);
-            }
-          });
-        }
-      });
-  
-      // Open Checkout with further options:
-      stripe.open({
-        name: 'Must Win',
-        description: 'You have to pay the entrance fee',
-        currency: 'gbp',
-        amount: joinFee * 100,
-        email: self.userEmail()
-      });
+  this.joinLeague = function(lId) {
+      window.knockoutObj.isSubmitting(true);
+      window.knockoutObj.postLeagueData(lId);
     }
 
     this.postLeagueData = function(lId) {

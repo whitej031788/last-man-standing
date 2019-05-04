@@ -2,38 +2,9 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var League = require('../models/league');
-var stripe = require("stripe")("sk_test_wWPYueXqxHLRnOxiA37wtRXE");
-
 var Match = require('../models/match');
 var Config = require('../models/config');
 var Pick = require('../models/pick');
-
-router.post('/stripePayment', requiresLogin, (req, res, next) => {
-  const token = req.body.stripeToken; // Using Express
-  let myGuid = guid();
-
-  stripe.charges.create({
-    amount: req.body.amount * 100,
-    currency: "gbp",
-    source: token, // obtained with Stripe.js
-    description: "Last Man Standing"
-  }, {
-    idempotency_key: myGuid
-  }, function(err, charge) {
-    if (err) {
-      res.json(500, "Stripe error");
-    } else {
-      if (charge.status == 'succeeded') {
-        res.json(200, {success: true});
-      } else {
-        res.json(500, "Stripe error");
-      }
-    }
-    console.log(charge);
-    console.log(err);
-  });
-})
-
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Home', route: req.route.path });
@@ -67,14 +38,7 @@ router.get('/league/:leagueId', requiresLogin, function(req, res, next) {
       next(err);
     } else {
       let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
-      
-      Config.findOne({ }, function (err, config) {
-        Match.find({ matchday: config.match_day }, function (err, matches) {
-          Pick.find({ match_day: config.match_day, userId: req.session.userId, leagueId: league._id }, function (err, pick) {
-            res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague, matches: matches, pick: pick, matchDay: config.match_day });
-          });
-        });
-      });
+      res.render('league', { title: 'League', route: '/league', league: league, isValid: isInLeague });
     }
   });
 });
@@ -89,9 +53,11 @@ router.get('/create-league', requiresLogin, function(req, res, next) {
 });
 
 router.get('/join-league', requiresLogin, function(req, res, next) {
-  League.find({ isPublic: true }, function (err, leagues) {
+  // problem - here we need to go through the leagues and see if the person has joined it if not. If not, show that league.
+  League.find(function (err, leagues) {
     let finalLagues = [];
     for (let i = 0; i < leagues.length; i++) {
+      console.log('Players:', leagues[i].players);
       if (leagues[i].players.indexOf(req.session.userId) === -1) {
         finalLagues.push(leagues[i]);
       }
@@ -103,6 +69,7 @@ router.get('/join-league', requiresLogin, function(req, res, next) {
 router.get('/your-leagues', requiresLogin, function(req, res, next) {
   League.find({ }, function (err, leagues) {
     let finalLagues = [];
+    // problem - need to loop over
     for (let i = 0; i < leagues.length; i++) {
       if (leagues[i].players.indexOf(req.session.userId) !== -1) {
         finalLagues.push(leagues[i]);
@@ -135,12 +102,15 @@ router.get('/logout', function(req, res, next) {
 // Update settings for account
 
 router.post('/login-user', function(req, res, next) {
+  console.log()
   User.authenticate(req.body.email, req.body.password, function (error, user) {
     if (error || !user) {
       res.json(500, "Wrong email or password");
     } else {
       req.session.userId = user._id;
+      req.session.username = user.name;
       req.session.email = user.email;
+      req.session.userInfo = user;
       res.json(200, {success: true});
     }
   });
@@ -157,6 +127,7 @@ router.post('/get-matches-by-week', requiresLogin, function(req, res, next) {
 });
 
 router.post('/create-user', function(req, res, next) {
+  console.log('Post to create user');
   // confirm that user typed same password twice
   if (req.body.password !== req.body.passwordConf) {
     res.json(500, 'Passwords do not match');
@@ -169,15 +140,21 @@ router.post('/create-user', function(req, res, next) {
     var userData = {
       email: req.body.email,
       name: req.body.name,
-      password: req.body.password
+      password: req.body.password,
+      league: []
     }
 
     User.create(userData, function (error, user) {
       if (error) {
         res.json(500, error);
+        console.log('User create error:', error);
       } else {
         req.session.email = user.email;
         req.session.userId = user._id;
+        req.session.username = user.name;
+        req.session.league = user.league;
+        req.session.userInfo = user;
+        console.log('Create user:', user.name);
         res.json(200, {success: true});
       }
     });
@@ -190,16 +167,14 @@ router.post('/create-league', requiresLogin, function(req, res, next) {
 
   if (req.body.name &&
     req.body.maxPlayers &&
-    req.body.joinFee &&
     req.body.league) {
 
     var leagueData = {
       name: req.body.name,
       maxPlayers: req.body.maxPlayers,
-      joinFee: req.body.joinFee,
       isPublic: req.body.isPublic,
       leagueName: req.body.league,
-      players: [req.session.userId],
+      players: req.session.userInfo,
       leagueAdmin: req.session.userId
     }
 
@@ -209,7 +184,7 @@ router.post('/create-league', requiresLogin, function(req, res, next) {
 
     League.create(leagueData, function (error, league) {
       if (error) {
-        res.json(500, error);
+        res.status(500).json(error);
       } else {
         res.json(200, {success: true, league_id: league._id, joinCode: league.joinCode});
       }
@@ -245,6 +220,7 @@ router.post('/make-pick', requiresLogin, function(req, res, next) {
 });
 
 router.post('/join-league', requiresLogin, function(req, res, next) {
+  console.log('user info:', req.session.userInfo);
   if (!req.body.leagueId) {
     res.json(500, "We did not get a league ID");
   } else {
@@ -255,11 +231,8 @@ router.post('/join-league', requiresLogin, function(req, res, next) {
         let isInLeague = (league.players.indexOf(req.session.userId) !== -1);
         if (isInLeague) {
           res.json(500, "You are already in the league!");
-        } else if (!league.isPublic && (league.joinCode != req.body.joinCode)) {
-            res.json(500, "The league code is not correct");
         } else {
-          league.players.push(req.session.userId);
-          console.log(league);
+          league.players.push(req.session.userInfo);
           league.save();
           res.json(200, {success: true});
         }

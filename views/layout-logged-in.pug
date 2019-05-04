@@ -1,7 +1,7 @@
 extends layout.pug
 
 block content
-  script(src="https://checkout.stripe.com/checkout.js")
+  //- script(src="https://checkout.stripe.com/checkout.js")
   nav.navbar.navbar-expand-lg.navbar-light.bg-light#lmsNavBar
     a.navbar-brand(href='#')
       img(src="/images/cropped-MW.jpg" style="height: 40px;")
@@ -18,10 +18,14 @@ block content
           a.nav-link(href='/join-league') Join League
         li.nav-item(data-bind="css: { active: activeNav() == 'create-league' }")
           a.nav-link(href='/create-league') Create League
-        li.nav-item(data-bind="css: { active: activeNav() == 'rules' }")
-          a.nav-link(href='/rules') Rules
-        li.nav-item(data-bind="css: { active: activeNav() == 'settings' }")
-          a.nav-link(href='/settings') Payouts
+        li.nav-item(data-bind="css: { active: activeNav() == 'my-squad' }")
+          a.nav-link(href='/my-squad') Squad
+        li.nav-item(data-bind="css: { active: activeNav() == 'my-auctions' }")
+          a.nav-link(href='/my-auctions') Auctions
+        li.nav-item(data-bind="css: { active: activeNav() == 'fixtures' }")
+          a.nav-link(href='/fixtures') Fixtures
+        li.nav-item(data-bind="css: { active: activeNav() == 'statistics' }")
+          a.nav-link(href='/statistics') Statistics
       ul.navbar-nav.float-right
         li.nav-item
           a.nav-link(href='/logout') Logout
