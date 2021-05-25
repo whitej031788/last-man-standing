@@ -1,21 +1,22 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
-var app = express();
+const app = express();
 
 // parse incoming requests
-app.use(bodyParser.json());
+app.use(express.json());
 
 //connect to MongoDB
-mongoose.connect('mongodb://localhost/last-man-standing');
-var db = mongoose.connection;
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useCreateIndex', true);
+mongoose.connect('mongodb://root:rootpassword@localhost', {useNewUrlParser: true});
+const db = mongoose.connection;
 
 //handle mongo error
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -28,9 +29,7 @@ app.use(session({
   secret: 'KKGjrXWv0QMAItae8rIbGOFy1f6hHQFf',
   resave: true,
   saveUninitialized: false,
-  store: new MongoStore({
-    mongooseConnection: db
-  })
+  store: MongoStore.create({ client: db.getClient() })
 }));
 
 // view engine setup
